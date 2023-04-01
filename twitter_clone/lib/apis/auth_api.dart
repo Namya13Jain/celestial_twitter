@@ -2,6 +2,8 @@
 //by simply making changes in AuthAPI class
 //2. another reason is for testing the auth functions using the abstract class
 // this ensures that every function is tested easily
+import 'dart:html';
+
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as model;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,6 +52,32 @@ class AuthAPI implements IAuthAPI {
           userId: 'unique()', email: email, password: password);
       //case of success
       return right(account);
+    } on AppwriteException catch (e, stackTrace) {
+      //case of failure
+      return left(
+        Failure(e.message ?? 'Some unexpected error occurred', stackTrace),
+      );
+    } catch (e, stackTrace) {
+      //case of failure
+      return left(
+        Failure(e.toString(), stackTrace),
+      );
+    }
+  }
+
+//login
+  @override
+  FutureEither<model.Session> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      //since we want Appwrite to generate the userId uniquely
+      //so we'll use 'unique()'
+      final session =
+          await _account.createEmailSession(email: email, password: password);
+      //case of success
+      return right(session);
     } on AppwriteException catch (e, stackTrace) {
       //case of failure
       return left(

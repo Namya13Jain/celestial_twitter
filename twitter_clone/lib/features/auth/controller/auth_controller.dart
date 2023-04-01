@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_clone/apis/auth_api.dart';
 import 'package:twitter_clone/core/utils.dart';
+import 'package:twitter_clone/features/auth/view/login_view.dart';
 
 //creating provider
 final authControllerProvider =
@@ -29,5 +30,20 @@ class AuthController extends StateNotifier<bool> {
     //l is failure class ===> show snackbar imported from utils.dart
     //r is Account model
     res.fold((l) => showSnackBar(context, l.message), (r) => print(r.email));
+  }
+
+  //to implement login
+  void login({
+    required String email,
+    required String password,
+    //here we are using a BuildContext for showing the snackbar for the error message
+    required BuildContext context,
+  }) async {
+    state = true;
+    final res = await _authAPI.login(email: email, password: password);
+    state = false;
+    //l is failure class ===> show snackbar imported from utils.dart
+    //r is Account model
+    res.fold((l) => showSnackBar(context, l.message), (r) => print(r.userId));
   }
 }
