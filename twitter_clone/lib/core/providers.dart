@@ -1,0 +1,18 @@
+// keep a track of all the providers which are common
+import 'package:appwrite/appwrite.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:twitter_clone/constants/appwrite_constants.dart';
+
+final appwriteClientProvider = Provider((ref) {
+  Client client = Client();
+  return client
+      .setEndpoint(AppwriteConstants.endpoint)
+      .setProject(AppwriteConstants.projectId)
+      .setSelfSigned(status: true);
+});
+
+//ref helps me to interact with other providers using ref.watch() and ref.read()
+final appwriteAccountProvider = Provider((ref) {
+  final client = ref.watch(appwriteClientProvider);
+  return Account(client);
+});
