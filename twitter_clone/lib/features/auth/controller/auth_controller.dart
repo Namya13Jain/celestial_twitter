@@ -25,6 +25,7 @@ class AuthController extends StateNotifier<bool> {
   }) async {
     state = true;
     final res = await _authAPI.signUp(email: email, password: password);
+    state = false;
     //l is failure class ===> show snackbar imported from utils.dart
     //r is Account model
     res.fold((l) => showSnackBar(context, l.message), (r) => print(r.email));
